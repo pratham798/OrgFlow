@@ -15,6 +15,7 @@ const initialState = {
   alertMessage: '',
   entityModalActive: false,
   entityModalInfo: {},
+  isLoading: false,
 };
 
 export const OrgEntityReducer = createSlice({
