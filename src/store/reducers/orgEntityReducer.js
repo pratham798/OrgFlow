@@ -26,25 +26,28 @@ export const OrgEntityReducer = createSlice({
    * Loads initial organization data from local storage or sets default data if not present.
    * @returns {Object} The organization data containing employees and teams.
    */
-  initialLoad: () => {
+  initialLoad: (state) => {
     if(!localStorage.getItem('OrgData')) {
       localStorage.setItem('OrgData', JSON.stringify({
-        employees: EMPLOYEES,
-        teams: TEAMS,
+        ...EMPLOYEES,
+        ...TEAMS,
       }))
     }
     const orgData = JSON.parse(localStorage.getItem('OrgData') || '{}');
-    return { ...orgData };
+    return {
+      ...state,
+      entities: orgData,
+    };
   },
 
   /**
-   * Updates or Creates the entity in the state with the provided action payload.
+   * Creates a new entity in the state with the provided action payload.
    * Also updates the local storage with the updated state.
    */
-  setEntity: (state, action) => {
+  addEntity: (state, action) => {
     const updatedState = {
       ...state,
-      [action.payload.role]: { ...action.payload.role, [action.payload.id]: action.payload.details }
+      entities: { ...state.entities, [action.payload.id]: action.payload.details }
     }
     updateLocalStorage(updatedState);
     return updatedState;
@@ -55,16 +58,25 @@ export const OrgEntityReducer = createSlice({
    * @returns {Object} - The updated state object after removing the entity.
    */
   removeEntity: (state, action) => {
-    const { [action.payload.id]: removedEntity, ...updatedEntities } = state[action.payload.role];
+    const { [action.payload.id]: removedEntity, ...updatedEntities } = state.entities;
     const updatedState = {
       ...state,
-      [action.payload.role]: updatedEntities
+      entities: updatedEntities
     };
     updateLocalStorage(updatedState);
     return updatedState;
   }},
+
+  addEntity: (state, action) => {
+    const updatedState = {
+      ...state,
+      entities: { ...state.entities, [action.payload.id]: action.payload.details }
+    }
+    updateLocalStorage(updatedState);
+    return updatedState;
+  },
 })
 
-export const {initialLoad, setEntity, removeEntity} = OrgEntityReducer.actions;
+export const {initialLoad, addEntity, removeEntity, updateEntity} = OrgEntityReducer.actions;
 
 export default OrgEntityReducer.reducer;
