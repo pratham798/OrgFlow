@@ -1,0 +1,19 @@
+.NavWrapper {
+  display: flex;
+  background: rgb(153, 201, 245);
+  justify-content: space-between;
+  padding: 1.2rem 1.6rem;
+  color: var(--light-font-color);
+  font-weight: var(--bold-font-weight);
+  font-size: var(--h4-size);
+
+  @media screen and (max-width: 360px) {
+    padding: 0.8rem 1.2rem;
+  }
+}
+
+.left, .right {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+}
