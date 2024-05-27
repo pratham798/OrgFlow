@@ -1,8 +1,10 @@
 import React,{ useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { initialLoad } from './store/reducers/orgEntityReducer';
+import { initialLoad } from '../store/reducers/orgEntityReducer';
 
-import Navbar from './components/Navbar/Navbar';
+import Navbar from './components/Navbar';
+import styles from './App.module.css';
+
 const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -21,6 +23,7 @@ const App = () => {
   return (
     <div>
       <Navbar />
+      <div className={styles.orgWrapper}></div>
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { EMPLOYEES, TEAMS } from '../../constants/entities';
+import { EMPLOYEES, TEAMS } from '../../app/constants/entities';
 
 /**
  * Updates the local storage with the provided state object after converting it to a JSON string.
