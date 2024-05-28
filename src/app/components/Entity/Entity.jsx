@@ -4,7 +4,7 @@ import filterAndReduceObject from '../../../utils/filterAndReduceObject';
 import EditIcon from '../../assets/edit.svg';
 import styles from './Entity.module.css';
 
-const Entity = ({details, orgData, isCategory}) => {
+const Entity = ({details, orgData}) => {
   const [isActive, setIsActive] = useState(false);
   const changeStatus = (e) => {
     e.stopPropagation();
@@ -15,7 +15,7 @@ const Entity = ({details, orgData, isCategory}) => {
   );
   const displayEntities = () => {
     return entities.map((entity) => {
-        return <Entity details={orgData[entity]} orgData={orgData} />;
+        return <Entity key={orgData[entity].id} details={orgData[entity]} orgData={orgData} />;
       })
   }
 

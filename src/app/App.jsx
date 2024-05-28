@@ -24,7 +24,7 @@ const App = () => {
   }, [dispatch]);
 
   const entities = entityData?.orgData && (
-    Object.keys(filterAndReduceObject(entityData.orgData, ([key, data]) => !data.parent))
+    Object.keys(filterAndReduceObject(entityData.orgData, ([_, data]) => !data.parent))
   );
   return (
     <>
@@ -33,7 +33,9 @@ const App = () => {
         <div className={styles.EntitiesWrapper}>
           {entities.map((entity) => {
             return (
-              <Entity details={entityData.orgData[entity]} orgData={entityData.orgData} />
+              <Entity 
+                details={entityData.orgData[entity]} 
+                key={entityData.orgData[entity].id} orgData={entityData.orgData} />
             )}
           )}
         </div>
