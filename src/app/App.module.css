@@ -1,0 +1,7 @@
+.EntitiesWrapper {
+  display: flex;
+  gap: 2.4rem;
+  flex-wrap: wrap;
+  padding: 1.2rem;
+  justify-content: center;
+}

@@ -35,6 +35,7 @@ body {
   font-family: 'Lexend', "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--primary-bg-color);
 }
 
 .hide-in-mobile {

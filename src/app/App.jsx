@@ -23,17 +23,20 @@ const App = () => {
     dispatch(initialLoad());
   }, [dispatch]);
 
+  const entities = entityData?.orgData && (
+    Object.keys(filterAndReduceObject(entityData.orgData, ([key, data]) => !data.parent))
+  );
   return (
     <>
       <Navbar />
-      <div className={styles.orgWrapper}>
-        { entityData?.orgData && (
-          Object.keys(filterAndReduceObject(entityData.orgData, ([key, data]) => !data.parent)).map(
-            (entity, index) => {
-              return  <Entity details={entityData.orgData[entity]} key={index} orgData={entityData.orgData} />
-            }
-          )
-        )}
+      <div className={styles.OrgWrapper}>
+        <div className={styles.EntitiesWrapper}>
+          {entities.map((entity) => {
+            return (
+              <Entity details={entityData.orgData[entity]} orgData={entityData.orgData} />
+            )}
+          )}
+        </div>
       </div>
     </>
   )

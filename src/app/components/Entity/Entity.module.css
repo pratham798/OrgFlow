@@ -1,0 +1,56 @@
+.EntityWrapper {
+  display: flex;
+  justify-content: space-between;
+  border: 0.1rem solid #e6e7e7;
+  padding: 0.8rem;
+  border-radius: 0.2rem;
+  gap: 4rem;
+  cursor: pointer;
+  width: max-content;
+  margin: 0 auto;
+}
+
+.active {
+  border: 0.2rem solid rgb(20, 165, 255);
+}
+
+.Name {
+  font-size: var(--h5-size);
+}
+
+.Position {
+  font-size: var(--h6-size);
+  color: #9fa1a1;
+}
+
+.Interact {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.SubEntities {
+  display: flex;
+  gap: 2.4rem;
+  flex-wrap: wrap;
+  padding: 0 1.2rem;
+  justify-content: center;
+}
+
+.Multiple {
+  border-top: 0.1rem solid #e6e7e7;
+  padding: 1.2rem;
+}
+
+.divider {
+  background-color: #e6e7e7;
+  margin: 0 auto;
+  width: max-content;
+  height: 2rem;
+  width: 0.1rem;
+}
+
+.EntityIcon {
+  width: 1.2rem;
+  height: auto;
+}
