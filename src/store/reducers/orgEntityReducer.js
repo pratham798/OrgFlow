@@ -67,7 +67,7 @@ export const OrgEntityReducer = createSlice({
     return updatedState;
   }},
 
-  addEntity: (state, action) => {
+  updateEntity: (state, action) => {
     const updatedState = {
       ...state,
       entities: { ...state.entities, [action.payload.id]: action.payload.details }
@@ -75,8 +75,30 @@ export const OrgEntityReducer = createSlice({
     updateLocalStorage(updatedState);
     return updatedState;
   },
+
+  setEntityModal: (state, action) => {
+    return {
+      ...state,
+      entityModalInfo: action.payload,
+      entityModalActive: true,
+    }
+  },
+
+  closeEntityModal: (state) => {
+    return {
+      ...state,
+      entityModalActive: false,
+    }
+  },
 })
 
-export const {initialLoad, addEntity, removeEntity, updateEntity} = OrgEntityReducer.actions;
+export const {
+  initialLoad, 
+  addEntity, 
+  removeEntity, 
+  updateEntity, 
+  setEntityModal, 
+  closeEntityModal,
+} = OrgEntityReducer.actions;
 
 export default OrgEntityReducer.reducer;

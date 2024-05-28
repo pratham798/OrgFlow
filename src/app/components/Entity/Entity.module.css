@@ -1,6 +1,7 @@
 .EntityWrapper {
   display: flex;
   justify-content: space-between;
+  position: relative;
   border: 0.1rem solid #e6e7e7;
   padding: 0.8rem;
   border-radius: 0.2rem;
@@ -53,4 +54,23 @@
 .EntityIcon {
   width: 1.2rem;
   height: auto;
+}
+
+.level {
+  color: var(--light-font-color);
+  font-size: var(--h6-size);
+  bottom: -1rem;
+  position: absolute;
+  left:0;
+  right:0;
+  margin: 0 auto;
+  width: max-content;
+  background-color: rgb(20, 165, 255);
+  padding: 0.1rem 0.4rem;
+  border-radius: 0.2rem;
+  visibility: hidden;
+}
+
+.showLevel {
+  visibility: visible;
 }

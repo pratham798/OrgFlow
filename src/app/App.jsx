@@ -35,7 +35,8 @@ const App = () => {
             return (
               <Entity 
                 details={entityData.orgData[entity]} 
-                key={entityData.orgData[entity].id} orgData={entityData.orgData} />
+                key={entityData.orgData[entity].id} 
+                orgData={entityData.orgData} level={1}/>
             )}
           )}
         </div>
