@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 
-import { closeEntityModal, removeEntity } from '../../../store/reducers/orgEntityReducer';
+import { closeEntityModal, removeEntity, addEntity, updateEntity } from '../../../store/reducers/orgEntityReducer';
 import OptionModal from '../OptionModal';
+import CreateForm from '../CreateForm';
 import CrossIcon from '../../assets/cross.svg';
 import styles from './EntityModal.module.css';
 
@@ -28,15 +29,19 @@ const EntityModal = ({entityModalInfo, isAlert, alertMessage}) => {
 
   const displayForm = (action) => {
     switch (action) {
-      case 'Add':
-        return <div>Add</div>;
-      case 'Update':
-        return <div>Update</div>;
+      case 'AddTeam':
+        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={addEntity()} action={'Add'} entityType={'Team'}/>;
+      case 'UpdateTeam':
+        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={updateEntity()} action={'Update'} entityType={'Team'}/>;
+      case 'AddEmployee':
+        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={addEntity()} action={'Add'} entityType={'Employee'}/>;
+      case 'UpdateEmployee':
+        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={updateEntity()} action={'Update'} entityType={'Employee'}/>;
       default:
         return <OptionModal handleAction={handleAction} entityModalInfo={entityModalInfo} />;
     }
   }
-  console.log(selectedForm);
+  
   return (
     <div className={styles.ModalContainer}>
       <div className={styles.ModalWrapper}>
