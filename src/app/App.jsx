@@ -42,7 +42,13 @@ const App = () => {
           )}
         </div>
       </div>
-      {entityData.entityModalActive && <EntityModal entityModalInfo={entityData.entityModalInfo}/>}
+      {entityData.entityModalActive && (
+        <EntityModal 
+          entityModalInfo={entityData.entityModalInfo}
+          isAlert={entityData.isAlert}
+          alertMessage={entityData.alertMessage}
+        />
+      )}
     </>
   )
 }

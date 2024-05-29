@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { EMPLOYEES, TEAMS } from '../../app/constants/entities';
+import { ERRORS } from '../../app/constants/errors';
+import filterAndReduceObject from '../../utils/filterAndReduceObject';
 
 /**
  * Updates the local storage with the provided state object after converting it to a JSON string.
@@ -7,6 +9,10 @@ import { EMPLOYEES, TEAMS } from '../../app/constants/entities';
  */
 const updateLocalStorage = (state) => {
   localStorage.setItem('OrgData', JSON.stringify(state));
+};
+
+const filterByKey = (allEntities, targetKey, filterKey) => {
+  return filterAndReduceObject(allEntities, ([__, data]) => data[filterKey] === targetKey);
 };
 
 const initialState = {
@@ -59,11 +65,25 @@ export const OrgEntityReducer = createSlice({
    */
   removeEntity: (state, action) => {
     const { [action.payload.id]: removedEntity, ...updatedEntities } = state.entities;
+    const childEntities = filterByKey(updatedEntities, removedEntity.role_id, 'parent');
+    console.log(childEntities);
+    if(removedEntity.role==='team' && Object.keys(childEntities).length>0) return {
+      ...state,
+      isAlert: true,
+      alertMessage: ERRORS.TeamRemovalError,
+    }
+    const parentEntity = Object.values(updatedEntities).find(
+      entity => entity.role_id === removedEntity.parent
+    );
+    Object.keys(childEntities).map((entity) => {
+      return childEntities[entity].parent=parentEntity.role_id;
+    })
     const updatedState = {
       ...state,
-      entities: updatedEntities
+      entities: {...updatedEntities, ...childEntities},
+      entityModalActive: false,
     };
-    updateLocalStorage(updatedState);
+    updateLocalStorage(updatedState.entities);
     return updatedState;
   },
 
@@ -77,7 +97,6 @@ export const OrgEntityReducer = createSlice({
   },
   
   setEntityModal: (state, action) => {
-    console.log('yo');
     return {
       ...state,
       entityModalInfo: action.payload,
@@ -89,6 +108,7 @@ export const OrgEntityReducer = createSlice({
     return {
       ...state,
       entityModalActive: false,
+      isAlert: false,
     }
   },
 }})
