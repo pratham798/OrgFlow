@@ -1,47 +1,48 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 
 import { closeEntityModal, removeEntity } from '../../../store/reducers/orgEntityReducer';
+import OptionModal from '../OptionModal';
 import CrossIcon from '../../assets/cross.svg';
 import styles from './EntityModal.module.css';
 
 const EntityModal = ({entityModalInfo, isAlert, alertMessage}) => {
+  const [selectedForm, setSelectedForm] = useState(null);
   const dispatch = useDispatch();
-  const closeModal = (e) => {
+
+  const closeModal = useCallback((e) => {
     e.stopPropagation();
-    return dispatch(closeEntityModal());
-  }
-  const handleAction = (e) => {
+    setSelectedForm(null);
+    dispatch(closeEntityModal());
+  },[dispatch]);
+
+  const handleAction = useCallback((e) => {
     e.stopPropagation();
     const action = e.target.getAttribute('data-action');
+    setSelectedForm(action);
+  },[]);
+
+  useEffect(() => {
+    if(selectedForm==='Delete') dispatch(removeEntity(entityModalInfo));
+  }, [dispatch, entityModalInfo, selectedForm])
+
+  const displayForm = (action) => {
     switch (action) {
       case 'Add':
-        console.log('add');
-        break;
+        return <div>Add</div>;
       case 'Update':
-        console.log('update');
-        break;
-      case 'Delete':
-        dispatch(removeEntity(entityModalInfo));
-        break;
+        return <div>Update</div>;
       default:
-        break;
+        return <OptionModal handleAction={handleAction} entityModalInfo={entityModalInfo} />;
     }
   }
-
+  console.log(selectedForm);
   return (
     <div className={styles.ModalContainer}>
       <div className={styles.ModalWrapper}>
         <img src={CrossIcon} className={styles.CloseContainer} 
           onClick={(e) => closeModal(e)} alt='close'/>
-          {isAlert ? ( <div className={styles.Alert}>{alertMessage}</div>):(
-              <div onClick={(e)=>handleAction(e)}>
-                <div className={styles.Option} data-action='Add'>Add New Team</div>
-                <div className={styles.Option} data-action='Add'>Add New Member</div>
-                <div className={styles.Option} data-action='Update'>Update {entityModalInfo.role}</div>
-                <div className={styles.Option} data-action='Delete'>Delete {entityModalInfo.role}</div>
-              </div>
-          )}
+          {isAlert ? (<div className={styles.Alert}>{alertMessage}</div>): displayForm(selectedForm)}
       </div>
     </div>
   )

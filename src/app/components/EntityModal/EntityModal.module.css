@@ -37,18 +37,6 @@
   margin-bottom: 0.5rem;
 }
 
-.Option {
-  text-align: center;
-  cursor: pointer;
-  padding: 1rem;
-  transition: all 0.2s;
-}
-
-.Option:hover {
-  background-color: rgb(20, 165, 255);
-  color: var(--light-font-color);
-}
-
 .Alert {
   text-align: center;
   padding: 1rem;

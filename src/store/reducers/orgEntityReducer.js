@@ -56,7 +56,8 @@ export const OrgEntityReducer = createSlice({
 
   /**
    * Removes an entity from the state based on the provided action payload.
-   * @returns {Object} - The updated state object after removing the entity.
+   * @returns {Object} - The updated state object after removing the entity and also replacing the 
+   * parent of direct child entities to the parent of removed entity.
    */
   removeEntity: (state, action) => {
     const removedEntity=action.payload;
