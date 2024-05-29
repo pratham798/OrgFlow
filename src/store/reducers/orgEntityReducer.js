@@ -46,9 +46,19 @@ export const OrgEntityReducer = createSlice({
    * Also updates the local storage with the updated state.
    */
   addEntity: (state, action) => {
+    const newEntity = action.payload;
+    if(newEntity.role === 'team' && state.entities.find((entity) =>  entity.name === newEntity.name)) {
+      return {
+        ...state,
+        isAlert: true,
+        alertMessage: ERRORS.DuplicateTeamError,
+      }
+    }
+    newEntity['id']=newEntity['role_id']=state.entities.length+1; 
     const updatedState = {
       ...state,
-      entities: [ ...state.entities, action.payload]
+      entities: [ ...state.entities, newEntity],
+      entityModalActive: false,
     }
     updateLocalStorage(updatedState);
     return updatedState;

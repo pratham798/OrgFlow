@@ -30,18 +30,18 @@ const EntityModal = ({entityModalInfo, isAlert, alertMessage}) => {
   const displayForm = (action) => {
     switch (action) {
       case 'AddTeam':
-        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={addEntity()} action={'Add'} entityType={'Team'}/>;
+        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={addEntity} action={'Add'} entityType={'Team'}/>;
       case 'UpdateTeam':
-        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={updateEntity()} action={'Update'} entityType={'Team'}/>;
+        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={updateEntity} action={'Update'} entityType={'Team'}/>;
       case 'AddEmployee':
-        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={addEntity()} action={'Add'} entityType={'Employee'}/>;
+        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={addEntity} action={'Add'} entityType={'Employee'}/>;
       case 'UpdateEmployee':
-        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={updateEntity()} action={'Update'} entityType={'Employee'}/>;
+        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={updateEntity} action={'Update'} entityType={'Employee'}/>;
       default:
         return <OptionModal handleAction={handleAction} entityModalInfo={entityModalInfo} />;
     }
   }
-  
+
   return (
     <div className={styles.ModalContainer}>
       <div className={styles.ModalWrapper}>

@@ -6,16 +6,17 @@ import styles from './CreateForm.module.css';
 
 const CreateForm = ({selectedEntity, action, entityType, dispatchFn}) => {
   const dispatch = useDispatch();
-  const defaultValues = {
+  const defaultValues = action === 'Update' ? {
     name: selectedEntity.name,
     phone: selectedEntity.phone,
-    email: selectedEntity.position,
-    position: selectedEntity.role_id,
-  }
-  const { register, handleSubmit, formState: { errors } } = useForm();
-  const onSubmit = data => {
-    // dispatch(dispatchFn(data));
-    console.log(data);
+    email: selectedEntity.email, // Correcting email value
+    position: selectedEntity.position,
+  } : {};
+  const { register, handleSubmit, formState: { errors } } = useForm({defaultValues});
+  const onSubmit = (entityData) => {
+    entityData['role'] = entityType.toLowerCase();
+    if(action === 'Add') entityData['parent']=selectedEntity.role_id;
+    dispatch(dispatchFn(entityData));
   };
 
   return (
