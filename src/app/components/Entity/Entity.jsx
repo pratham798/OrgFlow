@@ -9,7 +9,7 @@ import styles from './Entity.module.css';
 
 const Entity = ({details, orgData, level}) => {
   const [isActive, setIsActive] = useState(false);
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   const changeStatus = (e) => {
     e.stopPropagation();
     setIsActive(!isActive);
@@ -22,7 +22,10 @@ const Entity = ({details, orgData, level}) => {
         return <Entity key={orgData[entity].id} details={orgData[entity]} level={level+1} orgData={orgData} />;
       })
   }
-  const showEntities = () => dispatch(setEntityModal(details));
+  const showEntities = (e) => {
+    e.stopPropagation();
+    dispatch(setEntityModal(details));
+  };
 
   return (
     <div>
@@ -36,7 +39,7 @@ const Entity = ({details, orgData, level}) => {
         </div>
         <div className={styles.Interact}>
           <img className={styles.EntityIcon} 
-              src={EditIcon} onClick={() => showEntities()} alt='moreInfo'/>
+              src={EditIcon} onClick={(e) => showEntities(e)} alt='moreInfo'/>
         </div>
         <span className={classnames( styles.level, {
             [styles.showLevel]: entities.length > 0 && isActive,
@@ -57,4 +60,4 @@ const Entity = ({details, orgData, level}) => {
   )
 }
 
-export default Entity;
+export default React.memo(Entity);

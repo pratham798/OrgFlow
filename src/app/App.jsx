@@ -2,6 +2,7 @@ import React,{ useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 
 import { initialLoad } from '../store/reducers/orgEntityReducer';
+import EntityModal from './components/EntityModal';
 import filterAndReduceObject from '../utils/filterAndReduceObject';
 import Navbar from './components/Navbar';
 import Entity from './components/Entity';
@@ -41,6 +42,7 @@ const App = () => {
           )}
         </div>
       </div>
+      {entityData.entityModalActive && <EntityModal entityModalInfo={entityData.entityModalInfo}/>}
     </>
   )
 }

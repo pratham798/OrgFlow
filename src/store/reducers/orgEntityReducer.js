@@ -65,7 +65,7 @@ export const OrgEntityReducer = createSlice({
     };
     updateLocalStorage(updatedState);
     return updatedState;
-  }},
+  },
 
   updateEntity: (state, action) => {
     const updatedState = {
@@ -75,8 +75,9 @@ export const OrgEntityReducer = createSlice({
     updateLocalStorage(updatedState);
     return updatedState;
   },
-
+  
   setEntityModal: (state, action) => {
+    console.log('yo');
     return {
       ...state,
       entityModalInfo: action.payload,
@@ -90,7 +91,7 @@ export const OrgEntityReducer = createSlice({
       entityModalActive: false,
     }
   },
-})
+}})
 
 export const {
   initialLoad, 
