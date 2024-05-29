@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { EMPLOYEES, TEAMS } from '../../app/constants/entities';
 import { ERRORS } from '../../app/constants/errors';
-import filterAndReduceObject from '../../utils/filterAndReduceObject';
 
 /**
  * Updates the local storage with the provided state object after converting it to a JSON string.
@@ -11,12 +10,8 @@ const updateLocalStorage = (state) => {
   localStorage.setItem('OrgData', JSON.stringify(state));
 };
 
-const filterByKey = (allEntities, targetKey, filterKey) => {
-  return filterAndReduceObject(allEntities, ([__, data]) => data[filterKey] === targetKey);
-};
-
 const initialState = {
-  entities: {},
+  entities: [],
   isAlert: false,
   alertMessage: '',
   entityModalActive: false,
@@ -34,12 +29,12 @@ export const OrgEntityReducer = createSlice({
    */
   initialLoad: (state) => {
     if(!localStorage.getItem('OrgData')) {
-      localStorage.setItem('OrgData', JSON.stringify({
+      localStorage.setItem('OrgData', JSON.stringify([
         ...EMPLOYEES,
         ...TEAMS,
-      }))
+      ]))
     }
-    const orgData = JSON.parse(localStorage.getItem('OrgData') || '{}');
+    const orgData = JSON.parse(localStorage.getItem('OrgData') || '[]');
     return {
       ...state,
       entities: orgData,
@@ -53,7 +48,7 @@ export const OrgEntityReducer = createSlice({
   addEntity: (state, action) => {
     const updatedState = {
       ...state,
-      entities: { ...state.entities, [action.payload.id]: action.payload.details }
+      entities: [ ...state.entities, action.payload]
     }
     updateLocalStorage(updatedState);
     return updatedState;
@@ -64,23 +59,22 @@ export const OrgEntityReducer = createSlice({
    * @returns {Object} - The updated state object after removing the entity.
    */
   removeEntity: (state, action) => {
-    const { [action.payload.id]: removedEntity, ...updatedEntities } = state.entities;
-    const childEntities = filterByKey(updatedEntities, removedEntity.role_id, 'parent');
-    console.log(childEntities);
-    if(removedEntity.role==='team' && Object.keys(childEntities).length>0) return {
+    const removedEntity=action.payload;
+    const updatedEntities = state.entities.filter((entity) => entity.id !== removedEntity.id);
+    const childEntities = updatedEntities.filter((entity) =>  entity.parent === removedEntity.role_id);
+    const parentEntity = updatedEntities.find((entity) =>  entity.role_id === removedEntity.parent);
+    if(removedEntity.role==='team' && childEntities.length>0) return {
       ...state,
       isAlert: true,
       alertMessage: ERRORS.TeamRemovalError,
     }
-    const parentEntity = Object.values(updatedEntities).find(
-      entity => entity.role_id === removedEntity.parent
-    );
-    Object.keys(childEntities).map((entity) => {
-      return childEntities[entity].parent=parentEntity.role_id;
-    })
+    const updatedChildEntities = childEntities.map((entity) => ({
+      ...entity,
+      parent: parentEntity ? parentEntity.role_id : null,
+    }));
     const updatedState = {
       ...state,
-      entities: {...updatedEntities, ...childEntities},
+      entities: [...updatedEntities, ...updatedChildEntities],
       entityModalActive: false,
     };
     updateLocalStorage(updatedState.entities);
@@ -90,7 +84,7 @@ export const OrgEntityReducer = createSlice({
   updateEntity: (state, action) => {
     const updatedState = {
       ...state,
-      entities: { ...state.entities, [action.payload.id]: action.payload.details }
+      entities: [...state.entities, action.payload]
     }
     updateLocalStorage(updatedState);
     return updatedState;

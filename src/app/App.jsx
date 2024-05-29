@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { initialLoad } from '../store/reducers/orgEntityReducer';
 import EntityModal from './components/EntityModal';
-import filterAndReduceObject from '../utils/filterAndReduceObject';
 import Navbar from './components/Navbar';
 import Entity from './components/Entity';
 
@@ -24,25 +23,22 @@ const App = () => {
     dispatch(initialLoad());
   }, [dispatch]);
 
-  const entities = entityData?.orgData && (
-    Object.keys(filterAndReduceObject(entityData.orgData, ([_, data]) => !data.parent))
-  );
   return (
     <>
       <Navbar />
       <div className={styles.OrgWrapper}>
         <div className={styles.EntitiesWrapper}>
-          {entities.map((entity) => {
+          {entityData?.orgData?.filter((entity) => !entity.parent).map((entity) => {
             return (
               <Entity 
-                details={entityData.orgData[entity]} 
-                key={entityData.orgData[entity].id} 
+                details={entity} 
+                key={entity.id} 
                 orgData={entityData.orgData} level={1}/>
             )}
           )}
         </div>
       </div>
-      {entityData.entityModalActive && (
+      {entityData?.entityModalActive && (
         <EntityModal 
           entityModalInfo={entityData.entityModalInfo}
           isAlert={entityData.isAlert}

@@ -3,7 +3,6 @@ import classnames from 'classnames';
 import { useDispatch } from 'react-redux';
 
 import { setEntityModal } from '../../../store/reducers/orgEntityReducer';
-import filterAndReduceObject from '../../../utils/filterAndReduceObject';
 import EditIcon from '../../assets/edit.svg';
 import styles from './Entity.module.css';
 
@@ -14,12 +13,10 @@ const Entity = ({details, orgData, level}) => {
     e.stopPropagation();
     setIsActive(!isActive);
   }
-  const entities = orgData && (
-    Object.keys(filterAndReduceObject(orgData, ([key, data]) => data.parent === details.role_id))
-  );
+  const entities = orgData && orgData.filter((entity) => entity.parent === details.role_id);
   const displayEntities = () => {
     return entities.map((entity) => {
-        return <Entity key={orgData[entity].id} details={orgData[entity]} level={level+1} orgData={orgData} />;
+        return <Entity key={entity.id} details={entity} level={level+1} orgData={orgData} />;
       })
   }
   const showEntities = (e) => {
