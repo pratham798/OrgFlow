@@ -15,7 +15,8 @@ const getChildEntities = (entities, targetEntity) => {
 }
 //Function to get the Parent for the selected Entity (Team/Employee) in Heirarchy
 const getParentEntity = (entities, targetEntity) => {
-  return entities.find((entity) =>  entity.role_id === targetEntity.parent);
+  const parentEntity = entities.find(entity => entity.role_id === targetEntity.parent);
+  return parentEntity || null;
 }
 
 const initialState = {
@@ -68,7 +69,7 @@ export const OrgEntityReducer = createSlice({
       entities: [ ...state.entities, newEntity],
       entityModalActive: false,
     }
-    updateLocalStorage(updatedState);
+    updateLocalStorage(updatedState.entities);
     return updatedState;
   },
 
@@ -102,22 +103,32 @@ export const OrgEntityReducer = createSlice({
   },
 
   updateEntity: (state, action) => {
-    const targetEntity=action.payload;
-    const childEntities = getChildEntities(state.entities, targetEntity);
-    const parentEntity = getParentEntity(state.entities, targetEntity);
-
-    if(targetEntity.role==='team') return {
+    const {selectedEntity, updatedDetails} = action.payload;
+    console.log(action.payload);
+    const childEntities = getChildEntities(state.entities, selectedEntity);
+    const parentEntity = getParentEntity(state.entities, selectedEntity);
+    const updatedEntities = state.entities.map(entity => 
+      entity.id === selectedEntity.id ? { ...entity, ...updatedDetails } : entity
+    );
+    // if(selectedEntity.role==='employee') {
+    //   const updatedChildEntities = childEntities.map((entity) => ({
+    //     ...entity,
+    //     parent: parentEntity ? parentEntity.role_id : null,
+    //   }));
+    //   const updatedState = {
+    //     ...state,
+    //     entities: [...updatedEntities]
+    //   }
+    //   updateLocalStorage(updatedState.entities);
+    //   return updatedState;
+    // }
+    const updatedState={
       ...state,
-      entities: [...state.entities, action.payload]
-    }
-    const updatedChildEntities = childEntities.map((entity) => ({
-      ...entity,
-      parent: parentEntity ? parentEntity.role_id : null,
-    }));
-    return {
-      ...state,
-      entities: [...state.entities, ...updatedChildEntities, action.payload]
-    }
+      entities: updatedEntities,
+      entityModalActive: false,
+    };
+    updateLocalStorage(updatedState.entities);
+    return updatedState;
   },
   
   setEntityModal: (state, action) => {

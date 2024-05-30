@@ -8,30 +8,43 @@ import styles from './CreateForm.module.css';
 
 const CreateForm = ({selectedEntity, action, entityType, dispatchFn, orgData}) => {
   const dispatch = useDispatch();
-  const getLeadEntities = () => {
-    return orgData.map((entity) => ({
+  const parseAllEntities = () => {
+    return orgData.filter((entity) => entity.id !== selectedEntity.id).map((entity) => ({
       value: entity.role_id,
       label: entity.name,
       position: entity.position,
     }))
   }
-  const entityParent = orgData.find((entity) => entity.role_id === selectedEntity.parent)
+  const selectedEntityParent = orgData.find((entity) => entity.role_id === selectedEntity.parent)
   const defaultValues = action === 'Update' ? {
     name: selectedEntity.name,
     phone: selectedEntity.phone,
     email: selectedEntity.email,
     position: selectedEntity.position,
     parent: {
-      label: entityParent?.name || 'none',
-      value: entityParent?.value,
-      position: (entityParent?.name ? { position: entityParent.position } : null),
-      },
+      label: selectedEntityParent?.name || 'none',
+      value: selectedEntityParent?.role_id,
+      position: selectedEntityParent?.position,
+    },
   } : {};
   const { register, handleSubmit, control, formState: { errors } } = useForm({defaultValues});
-  const onSubmit = (entityData) => {
-    entityData['role'] = entityType.toLowerCase();
-    if(action === 'Add') entityData['parent']=selectedEntity.role_id;
-    dispatch(dispatchFn(entityData));
+
+  const onSubmit = (data) => {
+    if(action === 'Add') {
+      data['role']=entityType.toLowerCase();
+      data['parent']=selectedEntity.role_id;
+      dispatch(dispatchFn(data));
+    }
+    if(action === 'Update') {
+      const updatedDetails={
+        name:data['name'],
+        phone:data['phone'],
+        email:data['email'],
+        position:data['position'],
+        parent: data['parent'].value || null,
+      }
+      dispatch(dispatchFn({selectedEntity, updatedDetails}));
+    }
   };
 
   return (
@@ -79,7 +92,7 @@ const CreateForm = ({selectedEntity, action, entityType, dispatchFn, orgData}) =
             label={'Assigned To:'} register={register} inputName={'parent'}
             error={errors.parent} placeholder={"Select Lead"}
             control={control}
-            options={getLeadEntities()}
+            options={parseAllEntities()}
             required
           />
         </>

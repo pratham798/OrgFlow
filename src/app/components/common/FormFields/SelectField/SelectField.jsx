@@ -5,7 +5,7 @@ import Select from 'react-select';
 
 import styles from './SelectField.module.css';
 
-const SelectField = ({label, inputName, required, placeholder, error, control, options}) => {
+const SelectField = ({label, inputName, required, placeholder, error, control, options, multiSelect}) => {
   return (
     <>
       <div className={styles.InputWrapper}>
@@ -25,6 +25,7 @@ const SelectField = ({label, inputName, required, placeholder, error, control, o
               getOptionLabel={option => `${option.label}${option?.position ? ` (${option.position})` : ''}`}
               placeholder={placeholder}
               isClearable
+              isMulti={multiSelect}
             />
           )}
         />
