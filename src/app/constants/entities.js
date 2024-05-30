@@ -1,7 +1,8 @@
 /*
-  The logic here is we will treat all the employees and teams as nodes connected in form of linked list 
-  so basically for a certain employee or team which can be called a node will contain a reference to its 
-  parent's id through which we can easily map in UI that who will come under who.
+  The logic here is we will treat all the employees and teams as nodes called Entities which are 
+  connected in form of linked list so basically for a certain employee or team which can be called 
+  an entity will contain a reference to its parent's id and a role_id which will be treated as the parent
+  for the its own sub entities.Through this we can easily perform operations in UI.
 */
 export const EMPLOYEES = [
   {

@@ -10,6 +10,7 @@ import styles from './App.module.css';
 
 const App = () => {
   const dispatch = useDispatch();
+  //Fetches all the data from redux store
   const entityData = useSelector((state) => ({
     orgData: state.orgInfo.entities,
     isLoading: state.orgInfo.isLoading,
@@ -19,6 +20,7 @@ const App = () => {
     entityModalInfo: state.orgInfo.entityModalInfo,
   }));
 
+  //Sets the initial data in redux stores
   useEffect(() => {
     dispatch(initialLoad());
   }, [dispatch]);

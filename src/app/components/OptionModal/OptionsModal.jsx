@@ -2,6 +2,10 @@ import React from 'react'
 
 import styles from './OptionsModal.module.css';
 
+/* 
+  All the options to manipulate or create entities are mentioned here with there actions and 
+  through event bubbling the handleAction function passed down is triggered.
+*/
 const OptionsModal = ({ handleAction, entityModalInfo}) => {
   return (
     <div onClick={(e)=>handleAction(e)}>

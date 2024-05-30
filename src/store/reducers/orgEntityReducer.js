@@ -80,57 +80,43 @@ export const OrgEntityReducer = createSlice({
    */
   removeEntity: (state, action) => {
     const targetEntity=action.payload;
-    const updatedEntities = state.entities.filter((entity) => entity.id !== targetEntity.id);
-    const childEntities = getChildEntities(updatedEntities, targetEntity);
-    const parentEntity = getParentEntity(updatedEntities, targetEntity);
+    const childEntities = getChildEntities(state.entities, targetEntity);
     if(targetEntity.role==='team' && childEntities.length>0) return {
       ...state,
       isAlert: true,
       alertMessage: ERRORS.TeamRemovalError,
     }
-    const updatedChildEntities = childEntities.map((entity) => ({
-      ...entity,
-      parent: parentEntity ? parentEntity.role_id : null,
-    }));
-  
+    const updatedEntities = state.entities.filter((entity) => entity.id !== targetEntity.id).map((entity)=>(
+      entity.parent === targetEntity.role_id ? { ...entity, parent: targetEntity.parent } : {...entity}));
     const updatedState = {
       ...state,
-      entities: [...updatedEntities, ...updatedChildEntities],
+      entities: updatedEntities,
       entityModalActive: false,
     };
+
     updateLocalStorage(updatedState.entities);
     return updatedState;
   },
 
   updateEntity: (state, action) => {
     const {selectedEntity, updatedDetails} = action.payload;
-    console.log(action.payload);
-    const childEntities = getChildEntities(state.entities, selectedEntity);
-    const parentEntity = getParentEntity(state.entities, selectedEntity);
-    const updatedEntities = state.entities.map(entity => 
-      entity.id === selectedEntity.id ? { ...entity, ...updatedDetails } : entity
-    );
-    // if(selectedEntity.role==='employee') {
-    //   const updatedChildEntities = childEntities.map((entity) => ({
-    //     ...entity,
-    //     parent: parentEntity ? parentEntity.role_id : null,
-    //   }));
-    //   const updatedState = {
-    //     ...state,
-    //     entities: [...updatedEntities]
-    //   }
-    //   updateLocalStorage(updatedState.entities);
-    //   return updatedState;
-    // }
-    const updatedState={
+    const updatedEntities = state.entities.map((entity) => { 
+      if ( selectedEntity.role!=='team' && selectedEntity.parent!==updatedDetails.parent 
+           && entity.parent === selectedEntity.role_id) return { ...entity, parent: selectedEntity.parent }
+      else if (entity.id === selectedEntity.id) return { ...entity, ...updatedDetails }
+      return entity;
+    });
+
+    const updatedState = {
       ...state,
       entities: updatedEntities,
       entityModalActive: false,
-    };
+    }
     updateLocalStorage(updatedState.entities);
     return updatedState;
   },
   
+  //Opens the entity modal with the info of Selected Entity passed through payload
   setEntityModal: (state, action) => {
     return {
       ...state,
@@ -139,6 +125,7 @@ export const OrgEntityReducer = createSlice({
     }
   },
 
+  //Closes the entity modal
   closeEntityModal: (state) => {
     return {
       ...state,

@@ -6,6 +6,10 @@ import { setEntityModal } from '../../../store/reducers/orgEntityReducer';
 import EditIcon from '../../assets/edit.svg';
 import styles from './Entity.module.css';
 
+/*
+  This is a recursive component where when we click on any entity it will render its child by
+  searching through the entities which have current entity's role id as there parent
+*/
 const Entity = ({details, orgData, level}) => {
   const [isActive, setIsActive] = useState(false);
   const dispatch = useDispatch();

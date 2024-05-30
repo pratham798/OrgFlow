@@ -27,6 +27,7 @@ const EntityModal = ({entityModalInfo, isAlert, alertMessage, orgData}) => {
     if(selectedForm==='Delete') dispatch(removeEntity(entityModalInfo));
   }, [dispatch, entityModalInfo, selectedForm])
 
+  //Different types of forms are created based on the action passed through OptionModal rendered as Default
   const displayForm = (action) => {
     switch (action) {
       case 'AddTeam': return (

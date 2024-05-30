@@ -8,6 +8,7 @@ import styles from './CreateForm.module.css';
 
 const CreateForm = ({selectedEntity, action, entityType, dispatchFn, orgData}) => {
   const dispatch = useDispatch();
+  //Provides Options For Entity to whome they can be Assigned to
   const parseAllEntities = () => {
     return orgData.filter((entity) => entity.id !== selectedEntity.id).map((entity) => ({
       value: entity.role_id,
@@ -16,6 +17,8 @@ const CreateForm = ({selectedEntity, action, entityType, dispatchFn, orgData}) =
     }))
   }
   const selectedEntityParent = orgData.find((entity) => entity.role_id === selectedEntity.parent)
+
+  //Default Values for form inputs when an update form is triggered
   const defaultValues = action === 'Update' ? {
     name: selectedEntity.name,
     phone: selectedEntity.phone,
@@ -27,8 +30,9 @@ const CreateForm = ({selectedEntity, action, entityType, dispatchFn, orgData}) =
       position: selectedEntityParent?.position,
     },
   } : {};
-  const { register, handleSubmit, control, formState: { errors } } = useForm({defaultValues});
 
+  //Created Form using useForm hook provided by react-form-hook
+  const { register, handleSubmit, control, formState: { errors } } = useForm({defaultValues});
   const onSubmit = (data) => {
     if(action === 'Add') {
       data['role']=entityType.toLowerCase();
