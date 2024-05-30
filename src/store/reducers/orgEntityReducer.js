@@ -9,6 +9,14 @@ import { ERRORS } from '../../app/constants/errors';
 const updateLocalStorage = (state) => {
   localStorage.setItem('OrgData', JSON.stringify(state));
 };
+//Function to get the direct children for the selected Entity (Team/Employee) in Heirarchy
+const getChildEntities = (entities, targetEntity) => {
+  return entities.filter((entity) =>  entity.parent === targetEntity.role_id);
+}
+//Function to get the Parent for the selected Entity (Team/Employee) in Heirarchy
+const getParentEntity = (entities, targetEntity) => {
+  return entities.find((entity) =>  entity.role_id === targetEntity.parent);
+}
 
 const initialState = {
   entities: [],
@@ -70,11 +78,11 @@ export const OrgEntityReducer = createSlice({
    * parent of direct child entities to the parent of removed entity.
    */
   removeEntity: (state, action) => {
-    const removedEntity=action.payload;
-    const updatedEntities = state.entities.filter((entity) => entity.id !== removedEntity.id);
-    const childEntities = updatedEntities.filter((entity) =>  entity.parent === removedEntity.role_id);
-    const parentEntity = updatedEntities.find((entity) =>  entity.role_id === removedEntity.parent);
-    if(removedEntity.role==='team' && childEntities.length>0) return {
+    const targetEntity=action.payload;
+    const updatedEntities = state.entities.filter((entity) => entity.id !== targetEntity.id);
+    const childEntities = getChildEntities(updatedEntities, targetEntity);
+    const parentEntity = getParentEntity(updatedEntities, targetEntity);
+    if(targetEntity.role==='team' && childEntities.length>0) return {
       ...state,
       isAlert: true,
       alertMessage: ERRORS.TeamRemovalError,
@@ -83,6 +91,7 @@ export const OrgEntityReducer = createSlice({
       ...entity,
       parent: parentEntity ? parentEntity.role_id : null,
     }));
+  
     const updatedState = {
       ...state,
       entities: [...updatedEntities, ...updatedChildEntities],
@@ -93,12 +102,22 @@ export const OrgEntityReducer = createSlice({
   },
 
   updateEntity: (state, action) => {
-    const updatedState = {
+    const targetEntity=action.payload;
+    const childEntities = getChildEntities(state.entities, targetEntity);
+    const parentEntity = getParentEntity(state.entities, targetEntity);
+
+    if(targetEntity.role==='team') return {
       ...state,
       entities: [...state.entities, action.payload]
     }
-    updateLocalStorage(updatedState);
-    return updatedState;
+    const updatedChildEntities = childEntities.map((entity) => ({
+      ...entity,
+      parent: parentEntity ? parentEntity.role_id : null,
+    }));
+    return {
+      ...state,
+      entities: [...state.entities, ...updatedChildEntities, action.payload]
+    }
   },
   
   setEntityModal: (state, action) => {

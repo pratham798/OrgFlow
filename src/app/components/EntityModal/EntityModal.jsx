@@ -7,7 +7,7 @@ import CreateForm from '../CreateForm';
 import CrossIcon from '../../assets/cross.svg';
 import styles from './EntityModal.module.css';
 
-const EntityModal = ({entityModalInfo, isAlert, alertMessage}) => {
+const EntityModal = ({entityModalInfo, isAlert, alertMessage, orgData}) => {
   const [selectedForm, setSelectedForm] = useState(null);
   const dispatch = useDispatch();
 
@@ -29,14 +29,30 @@ const EntityModal = ({entityModalInfo, isAlert, alertMessage}) => {
 
   const displayForm = (action) => {
     switch (action) {
-      case 'AddTeam':
-        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={addEntity} action={'Add'} entityType={'Team'}/>;
-      case 'UpdateTeam':
-        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={updateEntity} action={'Update'} entityType={'Team'}/>;
-      case 'AddEmployee':
-        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={addEntity} action={'Add'} entityType={'Employee'}/>;
-      case 'UpdateEmployee':
-        return <CreateForm selectedEntity={entityModalInfo} dispatchFn={updateEntity} action={'Update'} entityType={'Employee'}/>;
+      case 'AddTeam': return (
+        <CreateForm 
+          selectedEntity={entityModalInfo} dispatchFn={addEntity} 
+          action={'Add'} entityType={'Team'} orgData={orgData}
+        />
+      );
+      case 'UpdateTeam': return (
+        <CreateForm 
+          selectedEntity={entityModalInfo} dispatchFn={updateEntity} 
+          action={'Update'} entityType={'Team'} orgData={orgData}
+        />
+      );
+      case 'AddEmployee': return (
+        <CreateForm 
+          selectedEntity={entityModalInfo} dispatchFn={addEntity} 
+          action={'Add'} entityType={'Employee'} orgData={orgData}
+        />
+      );
+      case 'UpdateEmployee': return (
+        <CreateForm 
+          selectedEntity={entityModalInfo} dispatchFn={updateEntity} 
+          action={'Update'} entityType={'Employee'} orgData={orgData}
+        />
+      );
       default:
         return <OptionModal handleAction={handleAction} entityModalInfo={entityModalInfo} />;
     }

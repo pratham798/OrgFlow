@@ -1,0 +1,31 @@
+.InputWrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 0.8rem auto;
+  justify-content: space-between;
+}
+
+.InputWrapper > input {
+  max-width: 15rem;
+  width: 100%;
+  flex: 1;
+  padding: 0.5rem;
+
+  @media screen and (max-width: 450px) {
+    max-width: 11rem;
+  }
+}
+
+.InputInvalid {
+  border: 0.1rem solid red;
+  border-radius: 0.4rem;
+}
+
+.InputError {
+  color: rgb(233, 44, 44);
+  font-size: var(--h6-size);
+  text-align: right;
+  margin-top: -0.8rem;
+}
